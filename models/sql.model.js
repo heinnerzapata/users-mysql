@@ -1,38 +1,25 @@
 const dbConfig = require("./../config/db.conf");
+
 const Sequelize = require("sequelize");
-const {dialect} = require("../config/db.conf");
 
-console.log("dbConfig", dbConfig);
-console.log("entra 1");
+const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+  host: dbConfig.HOST,
+  dialect: dbConfig.dialect,
+  operatorsAliases: false,
 
-try {
+  pool: {
+    max: dbConfig.pool.max,
+    min: dbConfig.pool.min,
+    acquire: dbConfig.pool.acquire,
+    idle: dbConfig.pool.idle
+  }
+});
 
-    console.log("entra 2");
+const db = {};
 
-    const sequelize = new Sequelize(
-        dbConfig.DB,
-        dbConfig.USER,
-        dbConfig.PASSWORD,
-        {
-            dialect: dbConfig.dialect
-        }
-    );
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-    console.log("entra 3");
+db.tutorials = require("./../api/sql/users/users.model")(sequelize, Sequelize);
 
-    const sqlDb = {};
-
-    sqlDb.Sequelize = Sequelize;
-    sqlDb.sequelize = sequelize;
-
-    sqlDb.users = require("./../api/sql/users/users.model")(sequelize, Sequelize);
-
-} catch (e) {
-    console.log(e);
-}
-
-console.log("entra 4");
-
-
-
-module.exports = {};
+module.exports = db;

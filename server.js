@@ -15,16 +15,15 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+const { sqlDb } = require("./models");
 
-const sqlDb = require("./models/sql.model");
-
-//sqlDb.sequelize.sync({ force: true })
-  //  .then(() => {
-   //     console.log("Drop and re-sync db.");
-   // })
-    //.catch((err) => {
-      //  console.log("Failed to sync db: " + err.message);
-   // });
+sqlDb.sequelize.sync({ force: true })
+   .then(() => {
+       console.log("Drop and re-sync db.");
+   })
+    .catch((err) => {
+       console.log("Failed to sync db: " + err.message);
+   });
 
 
 // simple route
